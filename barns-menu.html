@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Barn's Menu</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #ffffff;
+    --dark: #268902;
+    --brown: #03a100;
+    --brown-light: #208b00;
+    --accent: #00a305;
+    --border: rgba(107,63,31,0.15);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--dark);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* ── NAV ── */
+  nav {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--cream);
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 64px;
+  }
+  /* drop down menu looking nice */
+ 
+
+  .nav-logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+  }
+
+  .logo-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1.5px dashed var(--brown-light);
+    background: rgba(107,63,31,0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: var(--brown-light);
+  }
+
+  .nav-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--dark);
+    letter-spacing: 0.01em;
+  }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .lang-btn {
+    padding: 6px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    border-radius: 100px;
+    cursor: pointer;
+    transition: all 0.2s;
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+
+  .lang-btn.active {
+    background: var(--brown);
+    color: #fff;
+    border: 1.5px solid var(--brown);
+  }
+
+  .lang-btn.inactive {
+    background: transparent;
+    color: var(--brown);
+    border: 1.5px solid var(--border);
+  }
+
+  .lang-btn.inactive:hover {
+    border-color: var(--brown-light);
+    background: rgba(107,63,31,0.07);
+  }
+
+  /* ── CATEGORY NAV ── */
+  .cat-nav {
+    background: #fff;
+    border-bottom: 1px solid var(--border);
+    padding: 0 2rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    display: flex;
+    gap: 0;
+  }
+
+  .cat-nav::-webkit-scrollbar { display: none; }
+
+  .cat-link {
+    padding: 14px 18px;
+    font-size: 13px;
+    font-weight: 400;
+    color: #6B6560;
+    text-decoration: none;
+    white-space: nowrap;
+    border-bottom: 2px solid transparent;
+    transition: all 0.2s;
+    letter-spacing: 0.01em;
+  }
+
+  .cat-link:hover {
+    color: var(--brown);
+    border-bottom-color: var(--accent);
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 4rem 2rem 2rem;
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 500;
+    line-height: 1.15;
+    color: var(--dark);
+    margin-bottom: 12px;
+  }
+
+  .hero-sub {
+    font-size: 15px;
+    font-weight: 300;
+    color: #7A726C;
+    letter-spacing: 0.01em;
+  }
+
+  /* ── GRID ── */
+  .grid-section {
+    padding: 2rem 2rem 4rem;
+    max-width: 1100px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2,1fr);
+    gap: 15px;
+  }
+
+  .card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+    transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 32px rgba(107,63,31,0.12);
+    border-color: rgba(107,63,31,0.25);
+  }
+
+  .card-img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background: #F0EBE3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 12px;
+    border-bottom: 1px solid var(--border);
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* shown when no real image is set */
+  .card-img.placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgba(107,63,31,0.04) 8px,
+      rgba(107,63,31,0.04) 9px
+    );
+  }
+
+  .card-img.placeholder .ph-icon {
+    font-size: 28px;
+    opacity: 0.25;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-img.placeholder .ph-text {
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(107,63,31,0.4);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  .card-img img {
+    
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .card-body {
+    padding: 16px 18px 18px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--dark);
+  }
+  
+  .card-arrow {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    flex-shrink: 0;
+    font-size: 14px;
+    color: var(--brown);
+  }
+
+  .card:hover .card-arrow {
+    background: var(--brown);
+    border-color: var(--brown);
+    color: #fff;
+  }
+
+  /* ── FOOTER ── */
+  footer {
+    margin-top: auto;
+    background: var(--dark);
+    color: rgba(255,255,255,0.6);
+    padding: 2.5rem 2rem;
+  }
+
+  .footer-inner {
+    max-width: 1100px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    text-align: center;
+  }
+
+  .footer-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    color: #fff;
+    font-weight: 500;
+  }
+
+  .tax-note {
+    font-size: 12px;
+    font-weight: 300;
+    letter-spacing: 0.03em;
+    line-height: 1.8;
+  }
+
+  .socials {
+    display: flex;
+    gap: 12px;
+  }
+
+  .social-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    font-size: 16px;
+    transition: all 0.2s;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .social-btn:hover {
+    background: rgba(255,255,255,0.1);
+    border-color: rgba(255,255,255,0.35);
+  }
+  .sidebar {
+  height: 100vh;
+  width: 250px;
+  position: fixed;
+  top: 0;
+  left: -250px; /* Initially hidden off-screen */
+  background-color: #333;
+  transition: 0.3s; /* Smooth sliding effect */
+  padding-top: 60px;
+}
+
+/* Class to show the sidebar */
+.sidebar.active {
+  left: 0;
+}
+
+.nav-links a {
+  padding: 15px 25px;
+  text-decoration: none;
+  font-size: 18px;
+  color: white;
+  display: block;
+}
+
+  .footer-divider {
+    width: 100%;
+    height: 1px;
+    background: rgba(255,255,255,0.08);
+  }
+
+  .footer-copy {
+    font-size: 11px;
+    color: rgba(255,255,255,0.3);
+    letter-spacing: 0.04em;
+  }
+  @media (min-width: 768px) {
+    .grid {
+      grid-template-columns: repeat(3,1fr);
+    }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <nav>
+    <a href="#" class="nav-logo">
+      <img src="images/logo_green.png" alt="Barn's Logo" style="width: 120px; height: 120px;">
+      
+    </a>
+    <span class="nav-brand">Menu</span>
+    <div class="nav-right">
+      <a href="#" class="lang-btn active">EN</a>
+      <a href="#" class="lang-btn inactive">AR</a>
+    </div>
+  </nav>
+</header>
+
+
+
+
+<!-- GRID -->
+<div class="grid-section">
+  <div class="grid">
+    
+    
+    
+    <!-- CARD 1 — replace placeholder div with <img src="your-photo.jpg"> -->
+    <a class="card" href="cold-beverages.html">
+      <img src="images/Cold-Beverages.png" alt="Hot Beverages" class="card-img">
+      <div class="card-body">
+        <span class="card-title">Cold Beverages</span>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- CARD 2 -->
+    <a class="card" href="hot-bevs.html">
+      <img src="images/Hot-Beverages.png" alt="Hot Beverages" class="card-img">
+      <div class="card-body">
+        <span class="card-title">Hot Beverages</span>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- CARD 3 -->
+    <a class="card" href="sandwhich.html">
+      
+        <img src="images/Sandwhiches.png" alt="sa">
+      <div class="card-body">
+        <span class="card-title">Sandwich</span>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- CARD 4 -->
+    <a class="card" href="pastry.html">
+      <img src="images/Pastries-and-Desserts.png" alt="Pastries and Desserts">
+      <div class="card-body">
+        <span class="card-title">Pastry &amp; Dessert</span>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- CARD 5 -->
+    <a class="card" href="barnscap.html">
+      <img src="images/capsules.png" alt="Barn's Capsules">
+      <div class="card-body">
+        <span class="card-title">Barn's Capsules</span>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- CARD 6 -->
+    <a class="card" href="instantcoffee.html">
+      <img src="images/Instant-Coffee-(Satchets).png" alt="Instant Coffee (Sachets)">
+      <div class="card-body">
+        <span class="card-title">Instant Coffee (Sachets)</span>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- CARD 7 -->
+    <a class="card" href="tincan.html">
+      <img src="images/Tin-cans.png" alt="Tin Cans">
+      <div class="card-body">
+        <span class="card-title">Tin Cans</span>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+    <!-- CARD 8 -->
+    <a class="card" href="coffebean.html">
+      <img src="images/Instant-Coffee-(Satchets).png" alt="">
+      <div class="card-body">
+        <span class="card-title">Coffee Beans</span>
+        <div class="card-arrow">→</div>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  
+    <div class="socials">
+      <a href="https://www.instagram.com/barns.iraq/" class="social-btn" target="_blank" aria-label="Instagram">📷</a>
+      
+    </div>
+    <div class="footer-divider"></div>
+  </div>
+</footer>
+
+</body>
+</html>

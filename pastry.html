@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cold Beverages — Barn's</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --cream: #ffffff;
+    --dark: #268902;
+    --brown: #03a100;
+    --brown-light: #208b00;
+    --accent: #00a305;
+    --border: rgba(107,63,31,0.15);
+  }
+
+  html, body {
+    width: 100%;
+    height: auto;
+    background: var(--cream);
+    font-family: 'DM Sans', sans-serif;
+    color: var(--dark);
+  }
+
+  /* ── BACK BAR ── */
+  .back-bar {
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    background: #fff;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .back-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--brown);
+    transition: opacity 0.2s;
+  }
+
+  .back-btn:hover { opacity: 0.7; }
+
+  .back-divider {
+    width: 1px;
+    height: 16px;
+    background: var(--border);
+  }
+
+  .back-bar-title {
+    font-size: 13px;
+    color: #9A918A;
+    font-weight: 400;
+  }
+
+  /* ── HERO ── */
+  .hero {
+    padding: 2rem 1.5rem 1rem;
+    text-align: center;
+  }
+
+  .hero-eyebrow {
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+
+  .hero-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(24px, 4vw, 40px);
+    font-weight: 500;
+    color: var(--dark);
+    margin-bottom: 6px;
+  }
+
+  .hero-count {
+    font-size: 13px;
+    font-weight: 300;
+    color: #9A918A;
+  }
+
+  /* ── GRID ── */
+  .grid-section {
+    padding: 1.2rem 1.2rem 3rem;
+  }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+  }
+
+  @media (min-width: 600px) {
+    .grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  @media (min-width: 900px) {
+    .grid { grid-template-columns: repeat(4, 1fr); }
+    .grid-section { padding: 1.5rem 2rem 3rem; }
+  }
+
+  /* ── ITEM CARD ── */
+  .item-card {
+    background: #fff;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(107,63,31,0.12);
+  }
+
+  .item-card:active {
+    transform: scale(0.97);
+  }
+
+  .item-img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background: #F0EBE3;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .item-img.placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgba(107,63,31,0.04) 8px,
+      rgba(107,63,31,0.04) 9px
+    );
+  }
+
+  .item-img.placeholder .ph-icon {
+    font-size: 22px;
+    opacity: 0.2;
+    position: relative;
+    z-index: 1;
+  }
+
+  .item-img.placeholder .ph-text {
+    font-size: 9px;
+    color: rgba(107,63,31,0.35);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    position: relative;
+    z-index: 1;
+  }
+
+  .item-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.3s;
+  }
+
+  .item-card:hover .item-img img {
+    transform: scale(1.04);
+  }
+
+  .item-body {
+    padding: 10px 12px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    flex: 1;
+  }
+
+  .item-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--dark);
+    line-height: 1.3;
+  }
+
+  .item-price {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--brown-light);
+  }
+
+  /* ── MODAL OVERLAY ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(28, 20, 16, 0.55);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    z-index: 1000;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  @media (min-width: 600px) {
+    .modal-overlay {
+      align-items: center;
+    }
+  }
+
+  .modal-overlay.open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  /* ── MODAL CARD ── */
+  .modal {
+    background: #fff;
+    border-radius: 24px 24px 0 0;
+    width: 100%;
+    max-width: 480px;
+    overflow: hidden;
+    transform: translateY(40px);
+    transition: transform 0.35s cubic-bezier(0.34, 1.2, 0.64, 1);
+    position: relative;
+  }
+
+  @media (min-width: 600px) {
+    .modal {
+      border-radius: 24px;
+      transform: translateY(20px) scale(0.96);
+      margin: 1rem;
+    }
+  }
+
+  .modal-overlay.open .modal {
+    transform: translateY(0) scale(1);
+  }
+
+  /* drag handle */
+  .modal-handle {
+    width: 36px;
+    height: 4px;
+    background: var(--border);
+    border-radius: 2px;
+    margin: 12px auto 0;
+  }
+
+  @media (min-width: 600px) {
+    .modal-handle { display: none; }
+  }
+
+  .modal-img {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background: #F0EBE3;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-img.placeholder::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 8px,
+      rgba(107,63,31,0.04) 8px,
+      rgba(107,63,31,0.04) 9px
+    );
+  }
+
+  .modal-img img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+
+  .modal-body {
+    padding: 20px 24px 32px;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .modal-info {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .modal-name {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 500;
+    color: var(--dark);
+    line-height: 1.2;
+  }
+
+  .modal-price {
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--brown-light);
+  }
+
+  .modal-close {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    border: 1px solid var(--border);
+    background: var(--cream);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 16px;
+    color: var(--brown);
+    flex-shrink: 0;
+    transition: background 0.2s;
+    line-height: 1;
+  }
+
+  .modal-close:hover {
+    background: var(--border);
+  }
+
+  /* ── TAX NOTE ── */
+  .tax-note {
+    text-align: center;
+    padding: 0 1.5rem 1.5rem;
+    font-size: 11px;
+    font-weight: 300;
+    color: #9A918A;
+    line-height: 1.8;
+  }
+</style>
+</head>
+<body>
+
+<!-- BACK BAR -->
+<div class="back-bar">
+  <a class="back-btn" href="barns-menu.html">← Menu</a>
+  <div class="back-divider"></div>
+  <span class="back-bar-title">Pastries and Desserts</span>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-eyebrow">Barn's Menu</p>
+  <h1 class="hero-title">Pastries and Desserts</h1>
+  <p class="hero-count" id="item-count"></p>
+</div>
+
+<!-- GRID -->
+<div class="grid-section">
+  <div class="grid" id="items-grid">
+
+    <!--
+      HOW TO ADD AN ITEM:
+      1. Copy one item-card block below
+      2. Change data-name, data-price on the div
+      3. Change the item-name and item-price text
+      4. Replace placeholder div with:
+         <div class="item-img"><img src="images/your-photo.jpg" alt="Name"></div>
+
+      The modal will automatically use the data-name, data-price, and the image src.
+    -->
+
+    <div class="item-card" data-name="Item Name" data-price="0,000 IQD" data-img="">
+      <div class="item-img placeholder">
+        <span class="ph-icon">🖼</span>
+        <span class="ph-text">Photo</span>
+      </div>
+      <div class="item-body">
+        <span class="item-name">Item Name</span>
+        <span class="item-price">0,000 IQD</span>
+      </div>
+    </div>
+
+    <div class="item-card" data-name="Item Name" data-price="0,000 IQD" data-img="">
+      <div class="item-img placeholder">
+        <span class="ph-icon">🖼</span>
+        <span class="ph-text">Photo</span>
+      </div>
+      <div class="item-body">
+        <span class="item-name">Item Name</span>
+        <span class="item-price">0,000 IQD</span>
+      </div>
+    </div>
+
+    <div class="item-card" data-name="Item Name" data-price="0,000 IQD" data-img="">
+      <div class="item-img placeholder">
+        <span class="ph-icon">🖼</span>
+        <span class="ph-text">Photo</span>
+      </div>
+      <div class="item-body">
+        <span class="item-name">Item Name</span>
+        <span class="item-price">0,000 IQD</span>
+      </div>
+    </div>
+
+    <div class="item-card" data-name="Item Name" data-price="0,000 IQD" data-img="">
+      <div class="item-img placeholder">
+        <span class="ph-icon">🖼</span>
+        <span class="ph-text">Photo</span>
+      </div>
+      <div class="item-body">
+        <span class="item-name">Item Name</span>
+        <span class="item-price">0,000 IQD</span>
+      </div>
+    </div>
+
+    <div class="item-card" data-name="Item Name" data-price="0,000 IQD" data-img="">
+      <div class="item-img placeholder">
+        <span class="ph-icon">🖼</span>
+        <span class="ph-text">Photo</span>
+      </div>
+      <div class="item-body">
+        <span class="item-name">Item Name</span>
+        <span class="item-price">0,000 IQD</span>
+      </div>
+    </div>
+
+    <div class="item-card" data-name="Item Name" data-price="0,000 IQD" data-img="">
+      <div class="item-img placeholder">
+        <span class="ph-icon">🖼</span>
+        <span class="ph-text">Photo</span>
+      </div>
+      <div class="item-body">
+        <span class="item-name">Item Name</span>
+        <span class="item-price">0,000 IQD</span>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+  <div class="modal" id="modal">
+    <div class="modal-handle"></div>
+    <div class="modal-img" id="modal-img"></div>
+    <div class="modal-body">
+      <div class="modal-info">
+        <span class="modal-name" id="modal-name"></span>
+        <span class="modal-price" id="modal-price"></span>
+      </div>
+      <button class="modal-close" id="modal-close">✕</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Item count
+  const cards = document.querySelectorAll('.item-card');
+  document.getElementById('item-count').textContent = cards.length + ' items';
+
+  // Modal elements
+  const overlay   = document.getElementById('modal-overlay');
+  const modalImg  = document.getElementById('modal-img');
+  const modalName = document.getElementById('modal-name');
+  const modalPrice= document.getElementById('modal-price');
+
+  // Open modal on card click
+  cards.forEach(card => {
+    card.addEventListener('click', () => {
+      const name  = card.dataset.name;
+      const price = card.dataset.price;
+      const img   = card.dataset.img;
+      const imgEl = card.querySelector('.item-img img');
+
+      // Set modal content
+      modalName.textContent  = name;
+      modalPrice.textContent = price;
+
+      // Image
+      if (imgEl) {
+        modalImg.className = 'modal-img';
+        modalImg.innerHTML = `<img src="${imgEl.src}" alt="${name}">`;
+      } else {
+        modalImg.className = 'modal-img placeholder';
+        modalImg.innerHTML = '';
+      }
+
+      // Open
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+  });
+
+  // Close modal
+  function closeModal() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  document.getElementById('modal-close').addEventListener('click', closeModal);
+
+  // Close on overlay tap
+  overlay.addEventListener('click', e => {
+    if (e.target === overlay) closeModal();
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeModal();
+  });
+</script>
+
+</body>
+</html>
